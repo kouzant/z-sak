@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zsak>
+  <!-- Database connection properties -->
   <database>
     <host>192.168.1.2</host>
     <port>3306</port>
     <user>userA</user>
     <password>passwordA</password>
   </database>
+
+  <!-- Zeppelin configuration table name and column names -->
+  <table>
+    <name>zeppelin_interpreter_confs</name>
+    <conf_id_name>id</conf_id_name>
+    <project_id_name>project_id</project_id_name>
+    <last_update_name>last_update</last_update_name>
+    <interpreter_conf_name>interpreter_conf</interpreter_conf_name>
+  </table>
 </zsak>

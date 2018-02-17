@@ -22,7 +22,6 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -78,7 +77,7 @@ public class TestConfiguration {
   }
   
   @Test
-  public void testDatabaseProperties() throws Exception {
+  public void testDatabaseConnectionProperties() throws Exception {
     FileBasedConfigurationBuilder<XMLConfiguration> builder = getConfigurationBuilder();
     Configuration conf = builder.getConfiguration();
     
@@ -104,5 +103,48 @@ public class TestConfiguration {
     assertEquals(port, zsakConf.getInt(ZsakConfiguration.DATABASE_PORT_KEY));
     assertEquals(user, zsakConf.getString(ZsakConfiguration.DATABASE_USER_KEY));
     assertEquals(password, zsakConf.getString(ZsakConfiguration.DATABASE_PASSWORD_KEY));
+  }
+  
+  @Test
+  public void testZeppelinTableProperties() throws Exception {
+    FileBasedConfigurationBuilder<XMLConfiguration> builder = getConfigurationBuilder();
+    Configuration conf = builder.getConfiguration();
+    String zeppelinTableName = "zeppelin_inter";
+    String zeppelinConfIdName = "conf_id";
+    String zeppelinProjectIdName = "project_id";
+    String zeppelinLastUpdateName = "last_update_time";
+    String zeppelinInterConfName = "inter_conf";
+    conf.addProperty(ZsakConfiguration.ZEPPELIN_TABLE_NAME_KEY, zeppelinTableName);
+    conf.addProperty(ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_KEY,
+        zeppelinConfIdName);
+    conf.addProperty(ZsakConfiguration.ZEPPELIN_CONF_PROJECT_ID_NAME_KEY, zeppelinProjectIdName);
+    conf.addProperty(ZsakConfiguration.ZEPPELIN_CONF_LAST_UPDATE_NAME_KEY,
+        zeppelinLastUpdateName);
+    conf.addProperty(ZsakConfiguration
+        .ZEPPELIN_CONF_INTERPRETER_CONF_NAME_KEY, zeppelinInterConfName);
+    builder.save();
+  
+    FileBasedConfigurationBuilder<XMLConfiguration> zsakBuilder =
+        ConfigurationBuilderFactory.getInstance(BASE_DIR.toString(),
+            "zsak-conf.xml");
+    Zsak zsak = new Zsak();
+    zsak.setConfigBuilder(zsakBuilder);
+    zsak.init();
+    Configuration zsakConf = zsak.getConfiguration();
+    assertEquals(zeppelinTableName, zsakConf.getString(
+        ZsakConfiguration.ZEPPELIN_TABLE_NAME_KEY,
+        ZsakConfiguration.ZEPPELIN_TABLE_NAME_DEFAULT));
+    assertEquals(zeppelinConfIdName, zsakConf.getString(
+        ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_KEY,
+        ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_DEFAULT));
+    assertEquals(zeppelinProjectIdName, zsakConf.getString(
+        ZsakConfiguration.ZEPPELIN_CONF_PROJECT_ID_NAME_KEY,
+        ZsakConfiguration.ZEPPELIN_CONF_PROJECT_ID_NAME_DEFAULT));
+    assertEquals(zeppelinLastUpdateName, zsakConf.getString(
+        ZsakConfiguration.ZEPPELIN_CONF_LAST_UPDATE_NAME_KEY,
+        ZsakConfiguration.ZEPPELIN_CONF_LAST_UPDATE_NAME_DEFAULT));
+    assertEquals(zeppelinInterConfName, zsakConf.getString(
+        ZsakConfiguration.ZEPPELIN_CONF_INTERPRETER_CONF_NAME_KEY,
+        ZsakConfiguration.ZEPPELIN_CONF_INTERPRETER_CONF_NAME_DEFAULT));
   }
 }
