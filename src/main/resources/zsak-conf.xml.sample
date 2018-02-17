@@ -6,6 +6,7 @@
     <port>3306</port>
     <user>userA</user>
     <password>passwordA</password>
+    <schema>hopsworks</schema>
   </database>
 
   <!-- Zeppelin configuration table name and column names -->

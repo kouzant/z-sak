@@ -85,11 +85,13 @@ public class TestConfiguration {
     int port = 3306;
     String user = "userA";
     String password = "secure_password";
+    String schema = "my_hopsworks";
     
     conf.addProperty(ZsakConfiguration.DATABASE_HOST_KEY, host);
     conf.addProperty(ZsakConfiguration.DATABASE_PORT_KEY, port);
     conf.addProperty(ZsakConfiguration.DATABASE_USER_KEY, user);
     conf.addProperty(ZsakConfiguration.DATABASE_PASSWORD_KEY, password);
+    conf.addProperty(ZsakConfiguration.DATABASE_SCHEMA_KEY, schema);
     builder.save();
     
     FileBasedConfigurationBuilder<XMLConfiguration> zsakBuilder =
@@ -103,6 +105,9 @@ public class TestConfiguration {
     assertEquals(port, zsakConf.getInt(ZsakConfiguration.DATABASE_PORT_KEY));
     assertEquals(user, zsakConf.getString(ZsakConfiguration.DATABASE_USER_KEY));
     assertEquals(password, zsakConf.getString(ZsakConfiguration.DATABASE_PASSWORD_KEY));
+    assertEquals(schema, zsakConf.getString(
+        ZsakConfiguration.DATABASE_SCHEMA_KEY,
+        ZsakConfiguration.DATABASE_SCHEMA_DEFAULT));
   }
   
   @Test

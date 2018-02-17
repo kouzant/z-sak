@@ -24,6 +24,9 @@ public class ZsakConfiguration {
   public static final String DATABASE_USER_KEY = DATABASE_PREFIX + "user";
   public static final String DATABASE_PASSWORD_KEY = DATABASE_PREFIX + "password";
   
+  public static final String DATABASE_SCHEMA_KEY = DATABASE_PREFIX + "schema";
+  public static final String DATABASE_SCHEMA_DEFAULT = "hopsworks";
+  
   private static final String TABLE_PREFIX = "table.";
   public static final String ZEPPELIN_TABLE_NAME_KEY = TABLE_PREFIX + "name";
   public static final String ZEPPELIN_TABLE_NAME_DEFAULT =

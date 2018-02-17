@@ -17,13 +17,18 @@
  */
 package gr.kzps;
 
+import gr.kzps.DbConnection.DatabaseConnectionFactory;
 import gr.kzps.configuration.ConfigurationBuilderFactory;
+import gr.kzps.configuration.ZsakConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 
 public class Zsak {
@@ -39,9 +44,12 @@ public class Zsak {
   }
   
   public void init() throws ConfigurationException {
+    LOG.info("Initializing...");
     if (configBuilder == null) {
       configBuilder = ConfigurationBuilderFactory.getInstance();
     }
+    LOG.debug("Reading configuration file from {}",
+        configBuilder.getFileHandler().getFile().toString());
     configuration = configBuilder.getConfiguration();
   }
   
@@ -50,19 +58,33 @@ public class Zsak {
   }
   
   
-  private void start() {
-    
+  private void start() throws SQLException {
+    LOG.info("Starting...");
+    Connection connection = DatabaseConnectionFactory.builder()
+        .setHost(configuration.getString(ZsakConfiguration.DATABASE_HOST_KEY))
+        .setPort(configuration.getInt(ZsakConfiguration.DATABASE_PORT_KEY))
+        .setUser(configuration.getString(ZsakConfiguration.DATABASE_USER_KEY))
+        .setPassword(configuration.getString(ZsakConfiguration
+            .DATABASE_PASSWORD_KEY))
+        .setSchema(configuration.getString(
+            ZsakConfiguration.DATABASE_SCHEMA_KEY,
+            ZsakConfiguration.DATABASE_SCHEMA_DEFAULT))
+        .build();
   }
   
   public static void main(String[] argv) {
-    LOG.debug("Starting Zeppelin swiss army knife");
+    LOG.info("Starting Zeppelin swiss army knife");
     
     Zsak zsak = new Zsak();
     try {
       zsak.init();
+      zsak.start();
     } catch (ConfigurationException ex) {
       LOG.error("Error while parsing configuration file. Exiting...", ex);
       System.exit(1);
+    } catch (SQLException ex) {
+      LOG.error("Database error", ex);
+      System.exit(2);
     }
   }
 }
