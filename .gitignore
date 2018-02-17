@@ -35,3 +35,5 @@ target/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+dependency-reduced-pom.xml
+src/main/resources/zsak-conf.xml
