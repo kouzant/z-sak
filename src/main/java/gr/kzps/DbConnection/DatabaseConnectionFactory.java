@@ -21,38 +21,48 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class DatabaseConnectionFactory {
   private final static Logger LOG = LogManager.getLogger
       (DatabaseConnectionFactory.class);
   
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  private static Connection createConnection(Builder builder) throws
-      SQLException {
-    Properties connectionProps = new Properties();
-    connectionProps.put("user", builder.user);
-    connectionProps.put("password", builder.password);
-    
-    LOG.debug("Connection string: {}@jdbc:mysql://{}:{}/{}", builder.user,
-        builder.host, builder.port, builder.schema);
-    return DriverManager.getConnection(
-        "jdbc:mysql://" + builder.host + ":" + builder.port + "/" + builder
-            .schema, connectionProps);
+  public static Builder builder(String dbms) {
+    return new Builder(dbms);
   }
   
   public static class Builder {
+    private final String dbms;
     private String host;
     private int port;
     private String user;
     private String password;
     private String schema;
+  
+    public Builder(String dbms) {
+      this.dbms = dbms;
+    }
     
+    public String getHost() {
+      return host;
+    }
+  
+    public int getPort() {
+      return port;
+    }
+  
+    public String getUser() {
+      return user;
+    }
+  
+    public String getPassword() {
+      return password;
+    }
+  
+    public String getSchema() {
+      return schema;
+    }
+  
     public Builder setHost(String host) {
       this.host = host;
       return this;
@@ -79,7 +89,18 @@ public class DatabaseConnectionFactory {
     }
     
     public Connection build() throws SQLException {
-      return createConnection(this);
+      ConnectionFactory connectionFactory;
+      if (dbms.equals("mysql")) {
+        LOG.debug("Creating MySQL connection");
+        connectionFactory = new MySQLConnectionFactory();
+        return connectionFactory.createConnection(this);
+      } else if (dbms.equals("none")) {
+        LOG.debug("Creating None connection");
+        connectionFactory = new NoneConnectionFactory();
+        return connectionFactory.createConnection(this);
+      }
+      
+      throw new SQLException("Unsupported DBMS " + dbms);
     }
   }
 }

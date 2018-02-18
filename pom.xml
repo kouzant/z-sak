@@ -54,14 +54,14 @@
   </dependencies>
 
   <build>
-    <resources>
+    <!--<resources>
       <resource>
         <directory>src/main/resources</directory>
         <excludes>
           <exclude>zsak-conf.xml</exclude>
         </excludes>
       </resource>
-    </resources>
+    </resources>-->
 
     <plugins>
       <plugin>

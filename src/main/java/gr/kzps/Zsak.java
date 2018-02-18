@@ -20,13 +20,19 @@ package gr.kzps;
 import gr.kzps.DbConnection.DatabaseConnectionFactory;
 import gr.kzps.configuration.ConfigurationBuilderFactory;
 import gr.kzps.configuration.ZsakConfiguration;
+import gr.kzps.processors.DbProcessor;
+import gr.kzps.processors.Processor;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.beanutils.BeanDeclaration;
+import org.apache.commons.configuration2.beanutils.BeanHelper;
+import org.apache.commons.configuration2.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -36,11 +42,18 @@ public class Zsak {
   
   private Configuration configuration;
   private FileBasedConfigurationBuilder<XMLConfiguration> configBuilder;
+  private Connection connection;
+  private Processor processor;
   
   // Visible for testing
   public void setConfigBuilder(
       FileBasedConfigurationBuilder<XMLConfiguration> configBuilder) {
     this.configBuilder = configBuilder;
+  }
+  
+  // Visible for testing
+  public Processor getProcessor() {
+    return processor;
   }
   
   public void init() throws ConfigurationException {
@@ -58,18 +71,52 @@ public class Zsak {
   }
   
   
-  private void start() throws SQLException {
+  public void start() throws SQLException, IOException {
     LOG.info("Starting...");
-    Connection connection = DatabaseConnectionFactory.builder()
-        .setHost(configuration.getString(ZsakConfiguration.DATABASE_HOST_KEY))
-        .setPort(configuration.getInt(ZsakConfiguration.DATABASE_PORT_KEY))
-        .setUser(configuration.getString(ZsakConfiguration.DATABASE_USER_KEY))
-        .setPassword(configuration.getString(ZsakConfiguration
-            .DATABASE_PASSWORD_KEY))
-        .setSchema(configuration.getString(
-            ZsakConfiguration.DATABASE_SCHEMA_KEY,
-            ZsakConfiguration.DATABASE_SCHEMA_DEFAULT))
-        .build();
+    try {
+      processor = loadProcessor();
+      processor.setConfiguration(configuration);
+      if (processor instanceof DbProcessor) {
+        String dbms = configuration.getString(ZsakConfiguration
+            .DATABASE_DBMS_KEY, ZsakConfiguration.DATABASE_DBMS_DEFAULT);
+        connection = DatabaseConnectionFactory.builder(dbms)
+            .setHost(
+                configuration.getString(ZsakConfiguration.DATABASE_HOST_KEY))
+            .setPort(configuration.getInt(ZsakConfiguration.DATABASE_PORT_KEY))
+            .setUser(
+                configuration.getString(ZsakConfiguration.DATABASE_USER_KEY))
+            .setPassword(configuration.getString(ZsakConfiguration
+                .DATABASE_PASSWORD_KEY))
+            .setSchema(configuration.getString(
+                ZsakConfiguration.DATABASE_SCHEMA_KEY,
+                ZsakConfiguration.DATABASE_SCHEMA_DEFAULT))
+            .build();
+        ((DbProcessor) processor).setConnection(connection);
+      }
+    } catch (SQLException ex) {
+      throw ex;
+    } catch (Exception ex) {
+      LOG.error("Error while loading processor. Exiting...", ex);
+      throw new IOException(ex);
+    }
+  }
+  
+  private Processor loadProcessor() {
+    BeanDeclaration beanDeclaration = new XMLBeanDeclaration(
+        (XMLConfiguration) configuration, ZsakConfiguration
+        .PROCESSOR_CLASS_NAME_KEY);
+    return (Processor) BeanHelper.INSTANCE.createBean(beanDeclaration);
+  }
+  
+  public void apply() {
+    processor.process();
+  }
+  
+  public void cleanup() throws Exception {
+    processor.cleanup();
+    if (connection != null) {
+      connection.close();
+    }
   }
   
   public static void main(String[] argv) {
@@ -79,12 +126,26 @@ public class Zsak {
     try {
       zsak.init();
       zsak.start();
+      zsak.apply();
+      zsak.cleanup();
     } catch (ConfigurationException ex) {
       LOG.error("Error while parsing configuration file. Exiting...", ex);
       System.exit(1);
     } catch (SQLException ex) {
-      LOG.error("Database error", ex);
+      LOG.error("Database error. Trying to cleanup", ex);
+      try {
+        zsak.cleanup();
+      } catch (Exception cuex) {
+        LOG.error("Error while cleaning up", cuex);
+      }
       System.exit(2);
+    } catch (IOException ex) {
+      LOG.error("Processor error", ex);
+      System.exit(3);
+    } catch (Exception ex) {
+      // TODO(Antonis) Fix exception granularity
+      LOG.error("General error", ex);
+      System.exit(4);
     }
   }
 }

@@ -21,60 +21,11 @@ import gr.kzps.Zsak;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
-public class TestConfiguration {
-  private static final File BASE_DIR = Paths.get(System.getProperty(
-      "test.build.dir", "target/test-dir"),
-      TestConfiguration.class.getSimpleName()).toFile();
-  private static final File CONF_FILE = Paths.get(BASE_DIR.toString(),
-      "zsak-conf.xml").toFile();
-  
-  @BeforeClass
-  public static void setup() throws Exception {
-    if (!BASE_DIR.exists()) {
-      BASE_DIR.mkdirs();
-    }
-    prepareConfFile();
-  }
-  
-  @AfterClass
-  public static void destroy() throws Exception {
-    FileUtils.deleteQuietly(BASE_DIR);
-  }
-  
-  private static void prepareConfFile() throws IOException {
-    StringBuilder sb = new StringBuilder();
-    sb
-        .append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>").append("\n")
-        .append("<zsak>").append("\n")
-        .append("</zsak>").append("\n");
-    try (FileWriter fw = new FileWriter(CONF_FILE, false)) {
-      fw.write(sb.toString());
-    }
-  }
-  
-  private FileBasedConfigurationBuilder<XMLConfiguration> getConfigurationBuilder() {
-    Parameters builderParams = new Parameters();
-  
-    FileBasedConfigurationBuilder<XMLConfiguration> builder =
-        new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
-            .configure(builderParams.xml()
-                .setFile(CONF_FILE)
-                .setValidating(false));
-    return builder;
-  }
+public class TestConfiguration extends ZsakBaseTest {
   
   @Test
   public void testDatabaseConnectionProperties() throws Exception {

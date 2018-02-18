@@ -19,6 +19,9 @@ package gr.kzps.configuration;
 
 public class ZsakConfiguration {
   private static final String DATABASE_PREFIX = "database.";
+  public static final String DATABASE_DBMS_KEY = DATABASE_PREFIX + "dbms";
+  public static final String DATABASE_DBMS_DEFAULT = "mysql";
+  
   public static final String DATABASE_HOST_KEY = DATABASE_PREFIX + "host";
   public static final String DATABASE_PORT_KEY = DATABASE_PREFIX + "port";
   public static final String DATABASE_USER_KEY = DATABASE_PREFIX + "user";
@@ -50,4 +53,6 @@ public class ZsakConfiguration {
       TABLE_PREFIX + "interpreter_conf_name";
   public static final String ZEPPELIN_CONF_INTERPRETER_CONF_NAME_DEFAULT =
       "interpreter_conf";
+  
+  public static final String PROCESSOR_CLASS_NAME_KEY = "processors.processor";
 }
