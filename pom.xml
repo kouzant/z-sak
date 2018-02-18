@@ -54,6 +54,15 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>zsak-conf.xml</exclude>
+        </excludes>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -67,24 +76,22 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.1.0</version>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.0.2</version>
         <executions>
           <execution>
+            <id>copy-dependencies</id>
             <phase>package</phase>
             <goals>
-              <goal>shade</goal>
+              <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>gr.kzps.Zsak</mainClass>
-                </transformer>
-              </transformers>
+              <outputDirectory>${project.build.directory}/libs</outputDirectory>
             </configuration>
           </execution>
         </executions>
       </plugin>
+
     </plugins>
   </build>
 </project>
