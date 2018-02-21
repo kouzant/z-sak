@@ -21,7 +21,11 @@ import gr.kzps.Zsak;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Test;
+
+import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
@@ -59,6 +63,35 @@ public class TestConfiguration extends ZsakBaseTest {
     assertEquals(schema, zsakConf.getString(
         ZsakConfiguration.DATABASE_SCHEMA_KEY,
         ZsakConfiguration.DATABASE_SCHEMA_DEFAULT));
+  }
+  
+  @Test
+  public void testSQLQueriesSubstitution() throws Exception {
+    FileBasedConfigurationBuilder<XMLConfiguration> builder =
+        getConfigurationBuilder();
+    Configuration conf = builder.getConfiguration();
+    conf.addProperty(ZsakConfiguration.ZEPPELIN_TABLE_NAME_KEY,
+        "zeppelin_interpreter_confs");
+    conf.addProperty(ZsakConfiguration.PROJECT_NAME_NAME_KEY, "projectname");
+    conf.addProperty(ZsakConfiguration.PROJECT_TABLE_NAME_KEY, "project");
+    conf.addProperty(ZsakConfiguration.PROJECT_ID_NAME_KEY, "id");
+    
+    conf.addProperty(ZsakConfiguration
+        .ZEPPELIN_CONF_INTERPRETER_CONF_NAME_KEY, "interpreter_conf");
+    conf.addProperty(ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_KEY, "id");
+    builder.save();
+    
+    DbProcessorTest processorTest = new DbProcessorTest();
+    processorTest.setConfiguration(conf);
+    
+    String allZeppelingConfsSQL = "SELECT * FROM zeppelin_interpreter_confs";
+    String projectNameSQL = "SELECT projectname FROM project WHERE id = ?";
+    String updateConfSQL = "UPDATE zeppelin_interpreter_confs SET " +
+        "interpreter_conf = ? WHERE id = ?";
+    assertTrue(processorTest.isConfigurationSet());
+    assertEquals(allZeppelingConfsSQL, processorTest.getAllZeppelinConfsSQL());
+    assertEquals(projectNameSQL, processorTest.getGetProjectNameSQL());
+    assertEquals(updateConfSQL, processorTest.getUpdateConfSQL());
   }
   
   @Test

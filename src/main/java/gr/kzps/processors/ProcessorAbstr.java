@@ -76,7 +76,7 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
             ZsakConfiguration.PROJECT_ID_NAME_DEFAULT) +
         " = ?";
     
-    // UPDATE zeppelin_interpreter_confs SET interpreter_conf = ? WHERE ID = ?
+    // UPDATE zeppelin_interpreter_confs SET interpreter_conf = ? WHERE id = ?
     updateConfSQL = "UPDATE " + configuration.getString(
         ZsakConfiguration.ZEPPELIN_TABLE_NAME_KEY,
         ZsakConfiguration.ZEPPELIN_TABLE_NAME_DEFAULT) + " SET "
@@ -87,6 +87,21 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
             ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_KEY,
             ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_DEFAULT)
         + " = ?";
+  }
+  
+  // Visible for testing
+  public String getAllZeppelinConfsSQL() {
+    return allZeppelinConfsSQL;
+  }
+  
+  // Visible for testing
+  public String getGetProjectNameSQL() {
+    return getProjectNameSQL;
+  }
+  
+  // Visible for testing
+  public String getUpdateConfSQL() {
+    return updateConfSQL;
   }
   
   protected List<ProjectConfiguration> getAllZeppelinConfs() throws SQLException {

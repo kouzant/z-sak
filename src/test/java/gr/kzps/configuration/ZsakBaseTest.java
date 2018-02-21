@@ -22,6 +22,7 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 import java.io.File;
@@ -41,12 +42,16 @@ public class ZsakBaseTest {
     if (!BASE_DIR.exists()) {
       BASE_DIR.mkdirs();
     }
-    prepareConfFile();
   }
   
   @AfterClass
   public static void destroy() throws Exception {
     FileUtils.deleteQuietly(BASE_DIR);
+  }
+  
+  @Before
+  public void initConfFile() throws IOException {
+    prepareConfFile();
   }
   
   protected FileBasedConfigurationBuilder<XMLConfiguration> getConfigurationBuilder() {

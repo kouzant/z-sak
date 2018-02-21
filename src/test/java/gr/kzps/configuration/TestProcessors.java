@@ -36,16 +36,6 @@ import static org.junit.Assert.*;
 
 public class TestProcessors extends ZsakBaseTest {
   
-  @Before
-  public void setupTest() throws Exception {
-    setup();
-  }
-  
-  @After
-  public void tearDownTest() throws Exception {
-    destroy();
-  }
-  
   @Test
   public void testSimpleProcessor() throws Exception {
     addProcessorClassToConf(SimpleProcessorTest.class);

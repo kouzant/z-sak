@@ -36,6 +36,7 @@ public class DbProcessorTest extends ProcessorAbstr {
   @Override
   public void setConfiguration(Configuration configuration) {
     configurationSet = true;
+    super.setConfiguration(configuration);
   }
   
   @Override
