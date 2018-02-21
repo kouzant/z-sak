@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gr.kzps.processors;
+package gr.kzps.processors.impls;
 
 import gr.kzps.configuration.ProjectConfiguration;
 import gr.kzps.exceptions.ZeppelinConfException;
+import gr.kzps.processors.ProcessorAbstr;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
