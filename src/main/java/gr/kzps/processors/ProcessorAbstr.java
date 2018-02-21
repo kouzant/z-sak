@@ -19,6 +19,7 @@ package gr.kzps.processors;
 
 import gr.kzps.configuration.ProjectConfiguration;
 import gr.kzps.configuration.ZsakConfiguration;
+import gr.kzps.exceptions.ZeppelinConfException;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -175,6 +176,6 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
     }
   }
   
-  public abstract void process();
+  public abstract void process() throws ZeppelinConfException;
   public abstract void cleanup();
 }

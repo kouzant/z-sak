@@ -17,6 +17,7 @@
  */
 package gr.kzps.processors;
 
+import gr.kzps.exceptions.ZeppelinConfException;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +31,7 @@ public class EmptyProcessor implements Processor {
   }
   
   @Override
-  public void process() {
+  public void process() throws ZeppelinConfException {
     LOG.info("I am an empty processor, nothing to process");
   }
   

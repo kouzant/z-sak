@@ -17,10 +17,11 @@
  */
 package gr.kzps.processors;
 
+import gr.kzps.exceptions.ZeppelinConfException;
 import org.apache.commons.configuration2.Configuration;
 
 public interface Processor {
   void setConfiguration(Configuration configuration);
-  void process();
+  void process() throws ZeppelinConfException;
   void cleanup();
 }

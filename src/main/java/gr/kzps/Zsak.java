@@ -20,6 +20,7 @@ package gr.kzps;
 import gr.kzps.DbConnection.DatabaseConnectionFactory;
 import gr.kzps.configuration.ConfigurationBuilderFactory;
 import gr.kzps.configuration.ZsakConfiguration;
+import gr.kzps.exceptions.ZeppelinConfException;
 import gr.kzps.processors.DbProcessor;
 import gr.kzps.processors.Processor;
 import org.apache.commons.configuration2.Configuration;
@@ -78,6 +79,7 @@ public class Zsak {
     LOG.info("Starting...");
     try {
       processor = loadProcessor();
+      LOG.info("Loaded processor {}", processor.getClass().getCanonicalName());
       processor.setConfiguration(configuration);
       if (processor instanceof DbProcessor) {
         String dbms = configuration.getString(ZsakConfiguration
@@ -105,13 +107,14 @@ public class Zsak {
   }
   
   private Processor loadProcessor() {
+    LOG.debug("Loading processor");
     BeanDeclaration beanDeclaration = new XMLBeanDeclaration(
         (XMLConfiguration) configuration, ZsakConfiguration
         .PROCESSOR_CLASS_NAME_KEY);
     return (Processor) BeanHelper.INSTANCE.createBean(beanDeclaration);
   }
   
-  public void apply() {
+  public void apply() throws ZeppelinConfException {
     processor.process();
   }
   
@@ -131,6 +134,14 @@ public class Zsak {
       zsak.start();
       zsak.apply();
       zsak.cleanup();
+    } catch (ZeppelinConfException ex) {
+      LOG.error("Error while executing processor. Trying to cleanup", ex);
+      try {
+        zsak.cleanup();
+      } catch (Exception cuex) {
+        LOG.error("Error while cleaning up", cuex);
+      }
+      System.exit(5);
     } catch (ConfigurationException ex) {
       LOG.error("Error while parsing configuration file. Exiting...", ex);
       System.exit(1);
