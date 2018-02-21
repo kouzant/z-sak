@@ -134,21 +134,27 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
     }
   }
   
-  protected void updateDatabase(ProjectConfiguration projectConf)
+  protected void updateDatabase(List<ProjectConfiguration> projectConfigurations)
       throws SQLException {
     PreparedStatement updateStmt = null;
     try {
+      connection.setAutoCommit(false);
       updateStmt = connection.prepareStatement(updateConfSQL);
-      updateStmt.setString(1, projectConf.getInterpreterConfiguration());
-      updateStmt.setInt(2, projectConf.getId());
+      for (ProjectConfiguration projectConf : projectConfigurations) {
+        updateStmt.setString(1, projectConf.getInterpreterConfiguration());
+        updateStmt.setInt(2, projectConf.getId());
+        updateStmt.addBatch();
+        LOG.info("Updating Zeppelin configuration for project: {}",
+            projectConf.getProjectName());
+      }
       
-      updateStmt.executeUpdate();
-      LOG.info("Configuration for project " + projectConf.getProjectName() +
-          " updated!");
+      updateStmt.executeBatch();
+      connection.commit();
     } finally {
       if (updateStmt != null) {
         updateStmt.close();
       }
+      connection.setAutoCommit(true);
     }
   }
   
