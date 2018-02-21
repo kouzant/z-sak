@@ -17,11 +17,28 @@
  */
 package gr.kzps.processors;
 
+import gr.kzps.configuration.ProjectConfiguration;
+import gr.kzps.configuration.ZsakConfiguration;
 import org.apache.commons.configuration2.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ProcessorAbstr implements Processor, DbProcessor {
+  private final static Logger LOG = LogManager.getLogger(ProcessorAbstr.class);
+  
+  // SQL queries
+  private String allZeppelinConfsSQL;
+  private String getProjectNameSQL;
+  private String updateConfSQL;
+  
   private Configuration configuration;
   private Connection connection;
   
@@ -41,6 +58,100 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
   @Override
   public void setConfiguration(Configuration configuration) {
     this.configuration = configuration;
+    
+    // SELECT * FROM zeppelin_interpreter_confs
+    allZeppelinConfsSQL = "SELECT * FROM " + configuration.getString(
+        ZsakConfiguration.ZEPPELIN_TABLE_NAME_KEY,
+        ZsakConfiguration.ZEPPELIN_TABLE_NAME_DEFAULT);
+    
+    // SELECT projectname FROM project WHERE id = ?
+    getProjectNameSQL = "SELECT " + configuration.getString(
+        ZsakConfiguration.PROJECT_NAME_NAME_KEY,
+        ZsakConfiguration.PROJECT_NAME_NAME_DEFAULT) +
+        " FROM " + configuration.getString(
+            ZsakConfiguration.PROJECT_TABLE_NAME_KEY,
+            ZsakConfiguration.PROJECT_TABLE_NAME_DEFAULT) +
+        " WHERE " + configuration.getString(
+            ZsakConfiguration.PROJECT_ID_NAME_KEY,
+            ZsakConfiguration.PROJECT_ID_NAME_DEFAULT) +
+        " = ?";
+    
+    // UPDATE zeppelin_interpreter_confs SET interpreter_conf = ? WHERE ID = ?
+    updateConfSQL = "UPDATE " + configuration.getString(
+        ZsakConfiguration.ZEPPELIN_TABLE_NAME_KEY,
+        ZsakConfiguration.ZEPPELIN_TABLE_NAME_DEFAULT) + " SET "
+        + configuration.getString(
+            ZsakConfiguration.ZEPPELIN_CONF_INTERPRETER_CONF_NAME_KEY,
+            ZsakConfiguration.ZEPPELIN_CONF_INTERPRETER_CONF_NAME_DEFAULT)
+        + " = ? WHERE " + configuration.getString(
+            ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_KEY,
+            ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_DEFAULT)
+        + " = ?";
+  }
+  
+  protected List<ProjectConfiguration> getAllZeppelinConfs() throws SQLException {
+    Statement allZeppelinConfsStmt = null;
+    try {
+      allZeppelinConfsStmt = connection.createStatement();
+      ResultSet rs = allZeppelinConfsStmt.executeQuery(allZeppelinConfsSQL);
+      List<ProjectConfiguration> projectConfs = new ArrayList<>();
+      while (rs.next()) {
+        int projectId = rs.getInt(configuration.getString(
+            ZsakConfiguration.ZEPPELIN_CONF_PROJECT_ID_NAME_KEY,
+            ZsakConfiguration.ZEPPELIN_CONF_PROJECT_ID_NAME_DEFAULT));
+        
+        String projectName = getProjectNameFromID(projectId);
+        ProjectConfiguration projectConf = new ProjectConfiguration(
+            rs.getInt(configuration.getString(
+                ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_KEY,
+                ZsakConfiguration.ZEPPELIN_CONF_ID_NAME_DEFAULT)),
+            projectId, projectName,
+            rs.getString(configuration.getString(
+                ZsakConfiguration.ZEPPELIN_CONF_INTERPRETER_CONF_NAME_KEY,
+                ZsakConfiguration.ZEPPELIN_CONF_INTERPRETER_CONF_NAME_DEFAULT)));
+        projectConfs.add(projectConf);
+      }
+      return projectConfs;
+    } finally {
+      if (allZeppelinConfsStmt != null) {
+        allZeppelinConfsStmt.close();
+      }
+    }
+  }
+  
+  protected void updateDatabase(ProjectConfiguration projectConf)
+      throws SQLException {
+    PreparedStatement updateStmt = null;
+    try {
+      updateStmt = connection.prepareStatement(updateConfSQL);
+      updateStmt.setString(1, projectConf.getInterpreterConfiguration());
+      updateStmt.setInt(2, projectConf.getId());
+      
+      updateStmt.executeUpdate();
+      LOG.info("Configuration for project " + projectConf.getProjectName() +
+          " updated!");
+    } finally {
+      if (updateStmt != null) {
+        updateStmt.close();
+      }
+    }
+  }
+  
+  private String getProjectNameFromID(int projectId) throws SQLException {
+    PreparedStatement projectNameStmt = null;
+    try {
+      projectNameStmt = connection.prepareStatement(getProjectNameSQL);
+      projectNameStmt.setInt(1, projectId);
+      ResultSet rs = projectNameStmt.executeQuery();
+      rs.next();
+      return rs.getString(configuration.getString(
+          ZsakConfiguration.PROJECT_NAME_NAME_KEY,
+          ZsakConfiguration.PROJECT_NAME_NAME_DEFAULT));
+    } finally {
+      if (projectNameStmt != null) {
+        projectNameStmt.close();
+      }
+    }
   }
   
   public abstract void process();

@@ -78,6 +78,13 @@ public class TestConfiguration extends ZsakBaseTest {
         zeppelinLastUpdateName);
     conf.addProperty(ZsakConfiguration
         .ZEPPELIN_CONF_INTERPRETER_CONF_NAME_KEY, zeppelinInterConfName);
+    
+    String projectTableName = "proj_table";
+    String projectIdName = "id";
+    String projectNameName = "project_name";
+    conf.addProperty(ZsakConfiguration.PROJECT_TABLE_NAME_KEY, projectTableName);
+    conf.addProperty(ZsakConfiguration.PROJECT_ID_NAME_KEY, projectIdName);
+    conf.addProperty(ZsakConfiguration.PROJECT_NAME_NAME_KEY, projectNameName);
     builder.save();
   
     FileBasedConfigurationBuilder<XMLConfiguration> zsakBuilder =
@@ -102,5 +109,14 @@ public class TestConfiguration extends ZsakBaseTest {
     assertEquals(zeppelinInterConfName, zsakConf.getString(
         ZsakConfiguration.ZEPPELIN_CONF_INTERPRETER_CONF_NAME_KEY,
         ZsakConfiguration.ZEPPELIN_CONF_INTERPRETER_CONF_NAME_DEFAULT));
+    assertEquals(projectTableName, zsakConf.getString(
+        ZsakConfiguration.PROJECT_TABLE_NAME_KEY,
+        ZsakConfiguration.PROJECT_TABLE_NAME_DEFAULT));
+    assertEquals(projectIdName, zsakConf.getString(
+        ZsakConfiguration.PROJECT_ID_NAME_KEY,
+        ZsakConfiguration.PROJECT_ID_NAME_DEFAULT));
+    assertEquals(projectNameName, zsakConf.getString(
+        ZsakConfiguration.PROJECT_NAME_NAME_KEY,
+        ZsakConfiguration.PROJECT_NAME_NAME_DEFAULT));
   }
 }

@@ -15,6 +15,14 @@
     <interpreter_conf_name>interpreter_conf</interpreter_conf_name>
   </table>
 
+  <!-- Project table name and ID column name -->
+  <project_table>
+    <name>project</name>
+    <id_name>id</id_name>
+    <project_name_name>projectname</project_name_name>
+  </project_table>
+
+  <!-- Full name of processor class -->
   <processor>
     <processor config-class="gr.kzps.processors.DummyTest">
       <config-constrarg config-value="Some id"/>

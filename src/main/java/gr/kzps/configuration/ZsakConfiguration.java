@@ -30,29 +30,42 @@ public class ZsakConfiguration {
   public static final String DATABASE_SCHEMA_KEY = DATABASE_PREFIX + "schema";
   public static final String DATABASE_SCHEMA_DEFAULT = "hopsworks";
   
-  private static final String TABLE_PREFIX = "table.";
-  public static final String ZEPPELIN_TABLE_NAME_KEY = TABLE_PREFIX + "name";
+  private static final String ZEPPELIN_TABLE_PREFIX = "zeppelin_table.";
+  public static final String ZEPPELIN_TABLE_NAME_KEY = ZEPPELIN_TABLE_PREFIX + "name";
   public static final String ZEPPELIN_TABLE_NAME_DEFAULT =
       "zeppelin_interpreter_confs";
   
-  public static final String ZEPPELIN_CONF_ID_NAME_KEY = TABLE_PREFIX +
+  public static final String ZEPPELIN_CONF_ID_NAME_KEY = ZEPPELIN_TABLE_PREFIX +
       "conf_id_name";
   public static final String ZEPPELIN_CONF_ID_NAME_DEFAULT = "id";
   
-  public static final String ZEPPELIN_CONF_PROJECT_ID_NAME_KEY = TABLE_PREFIX +
+  public static final String ZEPPELIN_CONF_PROJECT_ID_NAME_KEY = ZEPPELIN_TABLE_PREFIX +
       "project_id_name";
   public static final String ZEPPELIN_CONF_PROJECT_ID_NAME_DEFAULT =
       "project_id";
   
-  public static final String ZEPPELIN_CONF_LAST_UPDATE_NAME_KEY = TABLE_PREFIX +
+  public static final String ZEPPELIN_CONF_LAST_UPDATE_NAME_KEY = ZEPPELIN_TABLE_PREFIX +
       "last_update_name";
   public static final String ZEPPELIN_CONF_LAST_UPDATE_NAME_DEFAULT =
       "last_update";
   
   public static final String ZEPPELIN_CONF_INTERPRETER_CONF_NAME_KEY =
-      TABLE_PREFIX + "interpreter_conf_name";
+      ZEPPELIN_TABLE_PREFIX + "interpreter_conf_name";
   public static final String ZEPPELIN_CONF_INTERPRETER_CONF_NAME_DEFAULT =
       "interpreter_conf";
+  
+  private static final String PROJECT_TABLE_PREFIX = "project_table.";
+  public static final String PROJECT_TABLE_NAME_KEY = PROJECT_TABLE_PREFIX +
+      "name";
+  public static final String PROJECT_TABLE_NAME_DEFAULT = "project";
+  
+  public static final String PROJECT_ID_NAME_KEY = PROJECT_TABLE_PREFIX +
+      "id_name";
+  public static final String PROJECT_ID_NAME_DEFAULT = "id";
+  
+  public static final String PROJECT_NAME_NAME_KEY = PROJECT_TABLE_PREFIX +
+      "project_name_name";
+  public static final String PROJECT_NAME_NAME_DEFAULT = "projectname";
   
   public static final String PROCESSOR_CLASS_NAME_KEY = "processors.processor";
 }
