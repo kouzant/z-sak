@@ -39,6 +39,7 @@ import java.sql.SQLException;
 
 public class Zsak {
   private static final Logger LOG = LogManager.getLogger(Zsak.class);
+  private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
   
   private Configuration configuration;
   private FileBasedConfigurationBuilder<XMLConfiguration> configBuilder;
@@ -56,8 +57,10 @@ public class Zsak {
     return processor;
   }
   
-  public void init() throws ConfigurationException {
+  public void init() throws ConfigurationException, ClassNotFoundException {
     LOG.info("Initializing...");
+    Class.forName(JDBC_DRIVER);
+    
     if (configBuilder == null) {
       configBuilder = ConfigurationBuilderFactory.getInstance();
     }
@@ -142,6 +145,8 @@ public class Zsak {
     } catch (IOException ex) {
       LOG.error("Processor error", ex);
       System.exit(3);
+    } catch (ClassNotFoundException ex) {
+      LOG.error("Could not find class", ex);
     } catch (Exception ex) {
       // TODO(Antonis) Fix exception granularity
       LOG.error("General error", ex);

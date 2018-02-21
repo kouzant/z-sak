@@ -23,9 +23,7 @@
   </project_table>
 
   <!-- Full name of processor class -->
-  <processor>
-    <processor config-class="gr.kzps.processors.DummyTest">
-      <config-constrarg config-value="Some id"/>
-    </processor>
-  </processor>
+  <processors>
+    <processor config-class="gr.kzps.processors.EmptyProcessor"/>
+  </processors>
 </zsak>

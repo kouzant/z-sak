@@ -35,11 +35,12 @@ public class MySQLConnectionFactory implements ConnectionFactory {
     Properties connectionProps = new Properties();
     connectionProps.put("user", builder.getUser());
     connectionProps.put("password", builder.getPassword());
+    connectionProps.put("useSSL", "false");
   
     LOG.debug("Connection string: {}@jdbc:mysql://{}:{}/{}", builder.getUser(),
         builder.getHost(), builder.getPort(), builder.getSchema());
     return DriverManager.getConnection(
         "jdbc:mysql://" + builder.getHost() + ":" + builder.getPort() + "/" +
-            builder.getSchema(), connectionProps);
+            builder.getSchema() + "?serverTimezone=UTC", connectionProps);
   }
 }
