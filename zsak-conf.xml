@@ -7,13 +7,13 @@
     <password>passwordA</password>
   </database>
 
-  <table>
+  <zeppelin_table>
     <name>zeppelin_interpreter_confs</name>
     <conf_id_name>id</conf_id_name>
     <project_id_name>project_id</project_id_name>
     <last_update_name>last_update</last_update_name>
     <interpreter_conf_name>interpreter_conf</interpreter_conf_name>
-  </table>
+  </zeppelin_table>
 
   <!-- Project table name and ID column name -->
   <project_table>
