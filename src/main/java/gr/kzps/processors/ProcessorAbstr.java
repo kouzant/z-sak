@@ -32,6 +32,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Base class for processors that require access to the database
+ */
 public abstract class ProcessorAbstr implements Processor, DbProcessor {
   private final static Logger LOG = LogManager.getLogger(ProcessorAbstr.class);
   
@@ -43,6 +46,10 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
   private Configuration configuration;
   private Connection connection;
   
+  /**
+   * Returns a reference to the database connection
+   * @return Database connection
+   */
   protected Connection getConnection() {
     return connection;
   }
@@ -52,6 +59,10 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
     this.connection = connection;
   }
   
+  /**
+   * Return a reference to z-sak configuration
+   * @return z-sak configuration
+   */
   protected Configuration getConfiguration() {
     return configuration;
   }
@@ -105,6 +116,11 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
     return updateConfSQL;
   }
   
+  /**
+   * Returns a list of all Project with Zeppelin configuration
+   * @return List of Zeppelin configurations
+   * @throws SQLException
+   */
   protected List<ProjectConfiguration> getAllZeppelinConfs() throws SQLException {
     Statement allZeppelinConfsStmt = null;
     try {
@@ -135,6 +151,11 @@ public abstract class ProcessorAbstr implements Processor, DbProcessor {
     }
   }
   
+  /**
+   * Update the database with the new Zeppelin configurations
+   * @param projectConfigurations List of Project configurations
+   * @throws SQLException
+   */
   protected void updateDatabase(List<ProjectConfiguration> projectConfigurations)
       throws SQLException {
     PreparedStatement updateStmt = null;

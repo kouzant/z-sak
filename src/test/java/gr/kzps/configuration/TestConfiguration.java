@@ -21,11 +21,8 @@ import gr.kzps.Zsak;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
 import org.junit.Test;
 
-import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
@@ -41,12 +38,14 @@ public class TestConfiguration extends ZsakBaseTest {
     String user = "userA";
     String password = "secure_password";
     String schema = "my_hopsworks";
+    String ssl = "true";
     
     conf.addProperty(ZsakConfiguration.DATABASE_HOST_KEY, host);
     conf.addProperty(ZsakConfiguration.DATABASE_PORT_KEY, port);
     conf.addProperty(ZsakConfiguration.DATABASE_USER_KEY, user);
     conf.addProperty(ZsakConfiguration.DATABASE_PASSWORD_KEY, password);
     conf.addProperty(ZsakConfiguration.DATABASE_SCHEMA_KEY, schema);
+    conf.addProperty(ZsakConfiguration.DATABASE_SSL_KEY, ssl);
     builder.save();
     
     FileBasedConfigurationBuilder<XMLConfiguration> zsakBuilder =
@@ -63,6 +62,8 @@ public class TestConfiguration extends ZsakBaseTest {
     assertEquals(schema, zsakConf.getString(
         ZsakConfiguration.DATABASE_SCHEMA_KEY,
         ZsakConfiguration.DATABASE_SCHEMA_DEFAULT));
+    assertEquals(ssl, zsakConf.getString(ZsakConfiguration.DATABASE_SSL_KEY,
+        ZsakConfiguration.DATABASE_SSL_DEFAULT));
   }
   
   @Test

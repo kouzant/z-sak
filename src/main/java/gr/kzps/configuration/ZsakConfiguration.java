@@ -17,6 +17,9 @@
  */
 package gr.kzps.configuration;
 
+/**
+ * Static configuration names
+ */
 public class ZsakConfiguration {
   private static final String DATABASE_PREFIX = "database.";
   public static final String DATABASE_DBMS_KEY = DATABASE_PREFIX + "dbms";
@@ -29,6 +32,9 @@ public class ZsakConfiguration {
   
   public static final String DATABASE_SCHEMA_KEY = DATABASE_PREFIX + "schema";
   public static final String DATABASE_SCHEMA_DEFAULT = "hopsworks";
+  
+  public static final String DATABASE_SSL_KEY = DATABASE_PREFIX + "ssl";
+  public static final String DATABASE_SSL_DEFAULT = "false";
   
   private static final String ZEPPELIN_TABLE_PREFIX = "zeppelin_table.";
   public static final String ZEPPELIN_TABLE_NAME_KEY = ZEPPELIN_TABLE_PREFIX + "name";

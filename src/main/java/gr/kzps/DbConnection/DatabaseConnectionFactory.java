@@ -23,10 +23,18 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Factory for database connections
+ */
 public class DatabaseConnectionFactory {
   private final static Logger LOG = LogManager.getLogger
       (DatabaseConnectionFactory.class);
   
+  /**
+   * Helper class to create a connection to a database
+   * @param dbms DBMS type
+   * @return Builder to create the connection
+   */
   public static Builder builder(String dbms) {
     return new Builder(dbms);
   }
@@ -38,6 +46,7 @@ public class DatabaseConnectionFactory {
     private String user;
     private String password;
     private String schema;
+    private String ssl;
   
     public Builder(String dbms) {
       this.dbms = dbms;
@@ -62,6 +71,10 @@ public class DatabaseConnectionFactory {
     public String getSchema() {
       return schema;
     }
+    
+    public String getSSL() {
+      return ssl;
+    }
   
     public Builder setHost(String host) {
       this.host = host;
@@ -85,6 +98,11 @@ public class DatabaseConnectionFactory {
     
     public Builder setSchema(String schema) {
       this.schema = schema;
+      return this;
+    }
+    
+    public Builder setSSL(String ssl) {
+      this.ssl = ssl;
       return this;
     }
     

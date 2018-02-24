@@ -17,6 +17,9 @@
  */
 package gr.kzps.exceptions;
 
+/**
+ * General z-sak exception
+ */
 public class ZeppelinConfException extends Exception {
   public ZeppelinConfException(String message) {
     super(message);

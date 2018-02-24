@@ -22,6 +22,9 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Dummy processor for testing
+ */
 public class EmptyProcessor implements Processor {
   private final static Logger LOG = LogManager.getLogger(EmptyProcessor.class);
   

@@ -25,10 +25,17 @@ import org.apache.commons.configuration2.io.ClasspathLocationStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Factory to get Configuration builders
+ */
 public class ConfigurationBuilderFactory {
   private final static Logger LOG = LogManager.getLogger
       (ConfigurationBuilderFactory.class);
   
+  /**
+   * Configuration builder to load the configuration file from the classpath
+   * @return Configuration builder
+   */
   public static FileBasedConfigurationBuilder<XMLConfiguration> getInstance() {
     LOG.debug("Creating FileBasedConfigurationBuilder with Classpath " +
         "location strategy");
@@ -43,6 +50,12 @@ public class ConfigurationBuilderFactory {
     return builder;
   }
   
+  /**
+   * Configuration builder to load the configuration file from a specific path
+   * @param basePath Path the directory
+   * @param fileName Name of the configuration file
+   * @return Configuration builder
+   */
   public static FileBasedConfigurationBuilder<XMLConfiguration> getInstance
       (String basePath, String fileName) {
     LOG.debug("Creating FileBasedConfigurationBuilder with BasePath location" +

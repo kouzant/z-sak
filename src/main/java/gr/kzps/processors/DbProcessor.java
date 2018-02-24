@@ -19,6 +19,13 @@ package gr.kzps.processors;
 
 import java.sql.Connection;
 
+/**
+ * Interface for processor that require access to the database
+ */
 public interface DbProcessor {
+  /**
+   * Sets the connection to the database
+   * @param connection Connection to database
+   */
   void setConnection(Connection connection);
 }

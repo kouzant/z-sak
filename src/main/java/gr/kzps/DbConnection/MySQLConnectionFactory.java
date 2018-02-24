@@ -25,6 +25,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Connection factory for MySQL DBMS
+ */
 public class MySQLConnectionFactory implements ConnectionFactory {
   private final static Logger LOG = LogManager.getLogger
       (MySQLConnectionFactory.class);
@@ -35,7 +38,7 @@ public class MySQLConnectionFactory implements ConnectionFactory {
     Properties connectionProps = new Properties();
     connectionProps.put("user", builder.getUser());
     connectionProps.put("password", builder.getPassword());
-    connectionProps.put("useSSL", "false");
+    connectionProps.put("useSSL", builder.getSSL());
   
     LOG.debug("Connection string: {}@jdbc:mysql://{}:{}/{}", builder.getUser(),
         builder.getHost(), builder.getPort(), builder.getSchema());

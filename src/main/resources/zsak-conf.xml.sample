@@ -5,6 +5,7 @@
       <dbms>mysql</dbms>
       <host>192.168.1.2</host>
       <port>3306</port>
+      <ssl>false</ssl>
       <user>userA</user>
       <password>passwordA</password>
       <schema>hopsworks</schema>

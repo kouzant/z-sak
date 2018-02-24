@@ -20,8 +20,24 @@ package gr.kzps.processors;
 import gr.kzps.exceptions.ZeppelinConfException;
 import org.apache.commons.configuration2.Configuration;
 
+/**
+ * Interface for every processor
+ */
 public interface Processor {
+  /**
+   * Sets z-sak configuration
+   * @param configuration Configuration object
+   */
   void setConfiguration(Configuration configuration);
+  
+  /**
+   * Method called to perform the update to Zeppelin configurations
+   * @throws ZeppelinConfException
+   */
   void process() throws ZeppelinConfException;
+  
+  /**
+   * Method called after process to perform any necessary cleanup
+   */
   void cleanup();
 }
