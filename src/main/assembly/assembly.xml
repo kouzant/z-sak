@@ -28,6 +28,11 @@
     </file>
 
     <file>
+      <source>src/main/resources/log4j2.xml</source>
+      <outputDirectory></outputDirectory>
+    </file>
+
+    <file>
       <source>scripts/run.sh</source>
       <outputDirectory></outputDirectory>
       <filtered>true</filtered>
