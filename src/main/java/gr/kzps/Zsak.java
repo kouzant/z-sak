@@ -88,6 +88,7 @@ public class Zsak {
             .setHost(
                 configuration.getString(ZsakConfiguration.DATABASE_HOST_KEY))
             .setPort(configuration.getInt(ZsakConfiguration.DATABASE_PORT_KEY))
+            .setSSL(configuration.getString(ZsakConfiguration.DATABASE_SSL_KEY))
             .setUser(
                 configuration.getString(ZsakConfiguration.DATABASE_USER_KEY))
             .setPassword(configuration.getString(ZsakConfiguration
