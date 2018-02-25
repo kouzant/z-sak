@@ -30,6 +30,7 @@
     <file>
       <source>scripts/run.sh</source>
       <outputDirectory></outputDirectory>
+      <filtered>true</filtered>
     </file>
   </files>
 </assembly>

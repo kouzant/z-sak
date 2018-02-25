@@ -1,4 +1,4 @@
 #!/bin/bash
 
-CLASSPATH=.:libs/*:z-sak-1.0-SNAPSHOT.jar:$CLASSPATH
-java -cp $CLASSPATH gr.kzps.Zsak
+ZSAK_CLASSPATH=.:libs/*:z-sak-${project.version}.jar:$ZSAK_CLASSPATH
+java -cp $ZSAK_CLASSPATH gr.kzps.Zsak
