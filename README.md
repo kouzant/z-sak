@@ -12,7 +12,7 @@ z-sak provides two interfaces for processors. *Processor* is the basic interface
 See the examples at `src/main/java/gr/kzps/processors/impls` To create your own Processor follow the instructions.
 
 #### Create your processor
-1) First you need to download z-sak archive which contains the library from [here](PUT A LINK)
+1) First you need to download z-sak archive which contains the library from [here](https://github.com/kouzant/z-sak/releases/download/v1.0/z-sak-1.0-dist.tar)
 2) Use your favorite IDE to create a new project
 3) Extract z-sak archive and add z-sak jar as a dependency to your project
 4) Write your processor implementing either the *Processor* or *DbProcessor* interface or extending the *ProcessorAbstr* class.
